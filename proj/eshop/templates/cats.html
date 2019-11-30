@@ -6,7 +6,13 @@
 </head>
 <body>
 CATS
-{{ category }}
+{% for cat in cats %}
+    <a href="/category/{{ cat.slug }}">{{ cat.name }}</a>
+{% endfor %}
+
+{% for product in products %}
+<h3>{{ product.name }}</h3>
+{% endfor %}
 
 </body>
 </html>
