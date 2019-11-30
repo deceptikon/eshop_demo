@@ -5,4 +5,5 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('category/<slug:slug>', views.cats, name='products_category'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
