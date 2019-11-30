@@ -18,7 +18,11 @@ class Migration(migrations.Migration):
                 ('quantity', models.IntegerField()),
             ],
         ),
-        migrations.AlterField(
+        migrations.RemoveField(
+            model_name='cart',
+            name='products'
+        ),
+        migrations.AddField(
             model_name='cart',
             name='products',
             field=models.ManyToManyField(through='eshop.CartContent', to='eshop.Product'),
