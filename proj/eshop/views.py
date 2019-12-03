@@ -47,7 +47,7 @@ def cats(request, slug=None):
     elif request.GET and 'action' in request.GET:
         if request.GET['action'] == 'clear_cart':
             cart.delete()
-            return redirect('products_category', slug=slug)
+            return redirect('products_category', slug=slug) if slug else redirect('products_category_all')
 
     context = { 'cats': cats, 'products': products,  'cart_records': cart_records }
     return render(request, 'cats.html', context)
