@@ -16,9 +16,13 @@ def cats(request, slug=None):
         selected_cat = Category.objects.get(slug=slug)
         products = Product.objects.filter(category_id=selected_cat.id).all()
     else:
-        products = []
+        products = Product.objects.all()
 
     session_key = request.session.session_key
+    if not session_key:
+        request.session.save()
+        session_key = request.session.session_key
+        
     try:
         cart = Cart.objects.get(session_key=session_key)
     except ObjectDoesNotExist:
