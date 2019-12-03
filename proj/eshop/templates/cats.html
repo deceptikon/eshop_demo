@@ -5,13 +5,26 @@
     <title>Title</title>
 </head>
 <body>
+Cart:
+Products added: {{ cart_records|length }}
+{% for rec in cart_records %}
+<div class="product-in-cart">
+    {{ rec.product.name }} : {{ rec.quantity }}
+</div>
+{% endfor %}
+<a href="?action=clear_cart">Очистить корзину</a>
+<hr/>
 CATS
 {% for cat in cats %}
     <a href="/category/{{ cat.slug }}">{{ cat.name }}</a>
 {% endfor %}
-
+<hr/>
 {% for product in products %}
-<h3>{{ product.name }}</h3>
+<div style="border: 1px solid #EEE; border-radius: 15px; display: inline-block; padding: 8px; width: 200px;">
+    <h3>{{ product.name }}</h3>
+    <p>{{ product.price }}</p>
+    <a href="?buy={{ product.id }}">Купить</a>
+</div>
 {% endfor %}
 
 </body>
