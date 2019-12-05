@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.contrib.auth import authenticate, login, logout
 
 from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Product, Category, Cart, CartContent
+from .forms import RegisterForm, LoginForm
 
 # Create your views here.
 def index(request):
@@ -22,7 +24,7 @@ def cats(request, slug=None):
     if not session_key:
         request.session.save()
         session_key = request.session.session_key
-        
+
     try:
         cart = Cart.objects.get(session_key=session_key)
     except ObjectDoesNotExist:
@@ -55,3 +57,37 @@ def cats(request, slug=None):
 
     context = { 'cats': cats, 'products': products,  'cart_records': cart_records }
     return render(request, 'cats.html', context)
+
+def register(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            return redirect('products_category_all')
+    else:
+        form = RegisterForm()
+    return render(request, 'register.html', {'form': form})
+
+def log_in(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['login']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('products_category_all')
+            else:
+                form.add_error('Bad login')
+    else:
+        form = LoginForm()
+
+    return render(request, 'login.html', { 'form': form })
+
+def log_out(request):
+    logout(request)
+    return redirect('products_category_all')
+
