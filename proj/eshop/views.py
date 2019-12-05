@@ -85,7 +85,8 @@ def log_in(request):
                     return redirect(request.GET['next'])
                 return redirect('products_category_all')
             else:
-                form.add_error('Bad login')
+                form.add_error('login', 'Bad login or password')
+                form.add_error('password', 'Bad login or password')
     else:
         form = LoginForm()
 
