@@ -4,6 +4,8 @@ from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
+
 
 from .models import Product, Category, Cart, CartContent
 from .forms import RegisterForm, LoginForm
@@ -79,6 +81,8 @@ def log_in(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
+                if request.GET and 'next' in request.GET:
+                    return redirect(request.GET['next'])
                 return redirect('products_category_all')
             else:
                 form.add_error('Bad login')
@@ -91,3 +95,6 @@ def log_out(request):
     logout(request)
     return redirect('products_category_all')
 
+@login_required()
+def protected(request):
+    return HttpResponse(str(request.user))
