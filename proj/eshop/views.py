@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.views.generic import TemplateView
 from django.contrib.auth import authenticate, login, logout
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -11,9 +12,6 @@ from .models import Product, Category, Cart, CartContent
 from .forms import RegisterForm, LoginForm
 
 # Create your views here.
-def index(request):
-    return render(request, 'main.html')
-
 def cats(request, slug=None):
     cats = Category.objects.all()
     if slug:
@@ -73,9 +71,20 @@ def register(request):
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
 
-def log_in(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
+def log_out(request):
+    logout(request)
+    return redirect('products_category_all')
+
+@login_required()
+def protected(request):
+    return HttpResponse(str(request.user))
+
+class LoginView(TemplateView):
+    view_form = LoginForm
+    login_template = 'login.html'
+
+    def post(self, request):
+        form = self.view_form(request.POST)
         if form.is_valid():
             username = form.cleaned_data['login']
             password = form.cleaned_data['password']
@@ -88,15 +97,9 @@ def log_in(request):
             else:
                 form.add_error('login', 'Bad login or password')
                 form.add_error('password', 'Bad login or password')
-    else:
-        form = LoginForm()
 
-    return render(request, 'login.html', { 'form': form })
+    def get(self, request):
+        form = self.view_form()
+        return render(request, self.login_template, { 'form': form })
 
-def log_out(request):
-    logout(request)
-    return redirect('products_category_all')
 
-@login_required()
-def protected(request):
-    return HttpResponse(str(request.user))
