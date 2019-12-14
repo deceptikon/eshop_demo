@@ -81,7 +81,7 @@ class CatsView(MasterView):
                 cart.delete()
                 return redirect('products_category', slug=slug) if slug else redirect('products_category_all')
 
-        context = { 'cats': cats, 'products': products,  'cart_records': cart_records, 'cart_total': cart_total }
+        context = { 'cats': cats, 'products': products,  'cart_records': cart_records }
         return render(request, 'cats.html', context)
 
 def register(request):
@@ -138,7 +138,7 @@ class CartView(MasterView):
 
         cart = self.get_cart()
         cart_records = self.get_cart_records(cart)
-        cart_total = cart.get_total() if cart else 777
+        cart_total = cart.get_total() if cart else 0
 
         print(cart_total)
         context = {
