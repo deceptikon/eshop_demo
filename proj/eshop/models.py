@@ -42,10 +42,20 @@ class Cart(models.Model):
     session_key = models.CharField(max_length=255, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
 
+    def get_total(self):
+        rows = CartContent.objects.filter(cart_id=self.id)
+        total = 0
+        for row in rows:
+            total += row.product.price * row.quantity
+        return total
+
 class CartContent(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
+
+    def get_total(self):
+        return self.quantity * self.product.price
 
 class Order(Cart):
     ordered_at = models.DateTimeField(default=datetime.now)

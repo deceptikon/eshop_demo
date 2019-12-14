@@ -7,8 +7,9 @@ from . import views
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='main.html'), name='index'),
-    path('category', views.cats, name='products_category_all'),
-    path('category/<slug:slug>', views.cats, name='products_category'),
+    path('category', views.CatsView.as_view(), name='products_category_all'),
+    path('category/<slug:slug>', views.CatsView.as_view(), name='products_category'),
+    path('cart', views.CartView.as_view(), name='cart'),
     path('login', views.LoginView.as_view(), name='login'),
     path('logout', views.log_out, name='logout'),
     path('register', views.register, name='register'),

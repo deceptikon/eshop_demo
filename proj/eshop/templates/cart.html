@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <section class="ftco-section ftco-cart">
+			<div class="container">
+				<div class="row">
+    			<div class="col-md-12 ftco-animate">
+    				<div class="cart-list">
+	    				<table class="table">
+						    <thead class="thead-primary">
+						      <tr class="text-center">
+						        <th>&nbsp;</th>
+						        <th>&nbsp;</th>
+						        <th>Product name</th>
+						        <th>Price</th>
+						        <th>Quantity</th>
+						        <th>Total</th>
+						      </tr>
+						    </thead>
+						    <tbody>
+							{% if cart_records %}
+                            {% for item in cart_records %}
+						      <tr class="text-center">
+						        <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
+
+						        <td class="image-prod"><div class="img" style="background-image:url(images/product-3.jpg);"></div></td>
+
+						        <td class="product-name">
+						        	<h3>{{ item.product.name }}</h3>
+						        	<p>{{ item.product.description }}</p>
+						        </td>
+
+						        <td class="price">${{ item.product.price }}</td>
+
+						        <td class="quantity">
+									<div class="input-group mb-3">
+										<input type="text" name="quantity" class="quantity form-control input-number" value="{{ item.quantity }}" min="1" max="100">
+									</div>
+								  </td>
+						        <td class="total">${{ item.get_total }}</td>
+						      </tr><!-- END TR-->
+							{% endfor %}
+							{% else %}
+							<tr class="text-center">
+								<td>
+									No products
+								</td>
+							</tr><!-- END TR-->
+							{% endif %}
+						    </tbody>
+						  </table>
+					  </div>
+    			</div>
+    		</div>
+    		<div class="row justify-content-end">
+    			<div class="col-lg-4 mt-5 cart-wrap ftco-animate">
+    			</div>
+    			<div class="col-lg-4 mt-5 cart-wrap ftco-animate">
+    			</div>
+    			<div class="col-lg-4 mt-5 cart-wrap ftco-animate">
+    				<div class="cart-total mb-3">
+    					<h3>Cart Totals</h3>
+<!--    					<p class="d-flex">-->
+<!--    						<span>Subtotal</span>-->
+<!--    						<span>$20.60</span>-->
+<!--    					</p>-->
+    					<p class="d-flex">
+    						<span>Delivery</span>
+    						<span>$0.00</span>
+    					</p>
+<!--    					<p class="d-flex">-->
+<!--    						<span>Discount</span>-->
+<!--    						<span>$3.00</span>-->
+<!--    					</p>-->
+    					<hr>
+    					<p class="d-flex total-price">
+    						<span>Total</span>
+    						<span>${{ cart_total }}</span>
+    					</p>
+    				</div>
+    				<p><a href="checkout.html" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
+    			</div>
+    		</div>
+		</div>
+	</section>
+{% endblock %}
+
+{% block contentii %}
+<div style="max-width: 980px; margin: 20px auto;"
+{{ user }}
+Products added: {{ cart_records|length }}
+{% for rec in cart_records %}
+<div class="product-in-cart">
+    {{ rec.product.name }} : {{ rec.quantity }}
+</div>
+{% endfor %}
+<a href="?action=clear_cart">Очистить корзину</a>
+<hr/>
+CATS
+{% for cat in cats %}
+    <a href="/category/{{ cat.slug }}">{{ cat.name }}</a>
+{% endfor %}
+<hr/>
+{% for product in products %}
+<div style="border: 1px solid #EEE; border-radius: 15px; display: inline-block; padding: 8px; width: 200px;">
+    <h3>{{ product.name }}</h3>
+    <p>{{ product.price }}</p>
+    <a href="?buy={{ product.id }}">Купить</a>
+</div>
+{% endfor %}
+
+{% endblock %}
