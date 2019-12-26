@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import user_passes_test
+
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
@@ -10,6 +12,17 @@ from django.contrib.auth.decorators import login_required
 
 from .models import Product, Category, Cart, CartContent
 from .forms import RegisterForm, LoginForm
+
+def in_groups(request, *group_names):
+   """Requires user membership in at least one of the groups passed in."""
+
+   u = request.user
+
+   if u.is_authenticated:
+       is_in_groups = u.groups.filter(name__in=group_names)
+       if is_in_groups or u.is_superuser:
+           return True
+   return False
 
 # Create your views here.
 class MasterView(TemplateView):
@@ -51,6 +64,9 @@ class MasterView(TemplateView):
 class CatsView(MasterView):
 
     def get(self, request, slug=None):
+        if not in_groups(request, 'managers', 'test'):
+            return render(request, 'forbidden.html')
+
         cats = Category.objects.all()
         print(slug)
         if slug:
