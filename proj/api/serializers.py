@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, Group
-from eshop.models import Product
+from eshop.models import Product, CartContent
 from rest_framework import serializers
 
 
@@ -17,4 +17,9 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Product
-        fields = ['name', 'price', 'description']
+        fields = ['id', 'name', 'price', 'description']
+
+class CartSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = CartContent
+        fields = ['product', 'product_id', 'quantity']
