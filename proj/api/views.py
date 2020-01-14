@@ -53,7 +53,7 @@ class CartViewSet(viewsets.ModelViewSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user_id = 1
-        cart = Cart.objects.get(user_id=self.user_id)
+        cart = Cart.objects.filter(user_id=self.user_id).first()
         self.queryset = CartContent.objects.filter(cart=cart)
 
     @action(detail=True, methods=['put'], name='Add to cart')
@@ -63,9 +63,16 @@ class CartViewSet(viewsets.ModelViewSet):
         data = { 'test': 'testdata' }
         if request.body:
             request_data = ast.literal_eval(request.body.decode('utf-8'))
-            cart = Cart.objects.get(user_id=self.user_id)
-            prod = Product.objects.get(id=request_data['product'])
+            cart = Cart.objects.filter(user_id=self.user_id).first()
+            if not cart:
+                cart = Cart(
+                    user_id=self.user_id,
+                    total_cost=0
+                )
+                cart.save()
+            prod = Product.objects.filter(id=request_data['product']).first()
             cart_data = []
+            print(cart, prod)
             try:
                 cart_record = CartContent.objects.get(cart_id=cart.id, product_id=prod.id)
                 cart_record.quantity = cart_record.quantity + 1
