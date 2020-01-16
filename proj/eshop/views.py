@@ -101,8 +101,10 @@ class CatsView(MasterView):
         return render(request, 'cats.html', context)
 
 def register(request):
+    form_submitted = False
     if request.method == 'POST':
         form = RegisterForm(request.POST)
+        form_submitted = True
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = True
@@ -111,7 +113,7 @@ def register(request):
             return redirect('products_category_all')
     else:
         form = RegisterForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'register.html', {'form': form, 'form_submitted': form_submitted })
 
 def log_out(request):
     logout(request)
