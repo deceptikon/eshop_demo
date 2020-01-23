@@ -33,6 +33,7 @@ class ProductView(APIView):
     queryset = Product.objects.all()
 
     def get(self, request):
+        print('products endpoint', request.user.id)
         prods = Product.objects.all()
         serializer = ProductSerializer(prods, many=True, context={'request': request})
         return Response(serializer.data)
