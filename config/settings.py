@@ -26,6 +26,7 @@ SECRET_KEY = '1(#%*bec2lo8qqu07o*0f9e%(_^-im9oqxr2yq=%m$&#5*%h)t'
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'eshop.test',
     '127.0.0.1'
 ]
 
