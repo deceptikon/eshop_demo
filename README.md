@@ -8,6 +8,9 @@
 To run app in production follow steps described here:
 https://www.digitalocean.com/community/tutorials/how-to-serve-django-applications-with-uwsgi-and-nginx-on-debian-8
 
+## Notice:
+if you use debian minimal installation and `usermod` command not working, use `/usr/sbin/usermod` instead
+
 ### config files used:
 
 `/etc/nginx/sites-enabled/eshop`
